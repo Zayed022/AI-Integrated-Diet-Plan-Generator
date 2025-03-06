@@ -22,6 +22,9 @@ app.use("/api/v1/foodItem",foodItemRoute);
 import recommendationRoute from './routes/recommendation.routes.js'
 app.use("/api/v1/recommendation",recommendationRoute);
 
+import mealRoute from './routes/meal.routes.js'
+app.use("/api/v1/meal",mealRoute);
+
 import feedbackRoute from './routes/feedback.routes.js'
 app.use("/api/v1/feedback",feedbackRoute);
 

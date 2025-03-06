@@ -2,6 +2,12 @@ import React from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router-dom' 
 import Register from "./Components/auth/Register"
+import Home from './Components/Home/Home'
+import Login from './Components/auth/Login'
+import Dashboard from './Components/Dashboard'
+import { LayoutDashboard } from 'lucide-react'
+import DietPlan from './Components/DietPlan'
+import { UserPreferencesForm } from './Components/UserPreferencesForm'
 
 function App() {
  
@@ -9,7 +15,13 @@ function App() {
   return (
     <>
       <Routes>
-      <Route path ="/login" element={<Register/>}/>
+      <Route path ="/login" element={<Login/>}/>
+      <Route path ="/register" element={<Register/>}/>
+      <Route path ="/" element={<Home/>}/>
+      <Route path ="/dashboard" element={<Dashboard/>}/>
+      <Route path ="/diet-plan" element={<DietPlan/>}/>
+      <Route path ="/user-preference" element={<UserPreferencesForm/>}/>
+      
       </Routes>
       
     </>

@@ -57,19 +57,27 @@ const mealSchema = new Schema(
                     },
                     calories:{
                       type:Number,
+                      default:0,
                       //required:true,
                   },
                   protein:{
                       type:Number,
+                      default:0,
                       //required:true,
                   },
                   carbs:{
                       type:Number,
+                      default:0,
                       //required:true,
                   },
                   fats:{
                       type:Number,
+                      default:0,
                       //required:true,
+                  },
+                  isConsumed: { 
+                    type: Boolean, 
+                    default: false 
                   },
                   isVegetarian:{
                       type:Boolean,
