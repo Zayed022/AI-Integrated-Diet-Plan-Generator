@@ -57,27 +57,37 @@ export const submitFoodFeedback = async (req, res) => {
 
 export const getAdvancedRecommendations = async (req, res) => {
   try {
-    const { userId, type } = req.body; // `type` can be "Seasonal", "Location-based", or "Dynamic"
+      const { userId, type } = req.body;
 
-    const user = await User.findById(userId);
-    if (!user) throw new Error("User not found");
+      if (!userId || !type) {
+          return res.status(400).json({ error: "User ID and recommendation type are required" });
+      }
 
-    let recommendations;
-    if (type === "Seasonal") {
-      recommendations = await getSeasonalFoods();
-    } else if (type === "Location-based") {
-      recommendations = await getLocationBasedFoods(user.location);
-    } else if (type === "Dynamic") {
-      recommendations = await getDynamicRecommendations(user);
-    } else {
-      throw new Error("Invalid recommendation type");
-    }
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
 
-    res.status(200).json({ recommendations });
+      let recommendations = [];
+
+      if (type === "Seasonal") {
+          recommendations = await getSeasonalFoods();
+      } else if (type === "Location-based") {
+          recommendations = await getLocationBasedFoods(user.location);
+      }
+
+      console.log("Recommendations found:", recommendations); // Debugging line
+
+      if (recommendations.length === 0) {
+          return res.status(200).json({ message: "No matching recommendations found", recommendations: [] });
+      }
+
+      res.status(200).json({ success: true, recommendations });
   } catch (error) {
-    console.error("Error in getAdvancedRecommendations:", error);
-    res.status(500).json({ error: "Failed to fetch advanced recommendations" });
+      console.error("Error in getAdvancedRecommendations:", error);
+      res.status(500).json({ error: "Failed to fetch advanced recommendations" });
   }
 };
+
 
 

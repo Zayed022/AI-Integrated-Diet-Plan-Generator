@@ -175,16 +175,24 @@ const recommendFoods = async (user, calorieLimit, mealType) => {
   const preferences = {
     ...(user.preference === "Vegan" && { isVegan: true }),
     ...(user.preference === "Vegetarian" && { isVegetarian: true }),
+    ...(user.preference === "GlutenFree" && { isGlutenFree: true }), // Add more filters if needed
   };
 
   const categoryFilter = getCategoryFilter(mealType);
 
+  /*
   return await Food.find({
     calories: { $lte: calorieLimit },
     ...preferences,
     category: { $in: categoryFilter },
   }).limit(5);
    // Select up to 5 items per meal
+   */
+
+   return await Food.aggregate([
+    { $match: { calories: { $lte: calorieLimit }, ...preferences, category: { $in: categoryFilter } } },
+    { $sample: { size: 5 } }, // Random selection to ensure variety
+  ]);
 };
 
 /**
@@ -241,10 +249,10 @@ export const updateFoodRating = async (foodId, newRating) => {
 export const getSeasonalFoods = async () => {
   const season = getCurrentSeason(); // Function to determine the current season
   const seasonalCategories = {
-    Winter: ["Soups", "Hot Drinks", "Root Vegetables"],
-    Summer: ["Salads", "Fresh Fruits", "Cold Beverages"],
-    Spring: ["Leafy Greens", "Light Meals"],
-    Autumn: ["Squash", "Nuts", "Comfort Foods"],
+    Winter: ["Soups", "Hot Drinks", "Vegetables A-E"],
+    Summer: ["Vegetables F-P", "Fruits A-F", "Drinks,Alcohol, Beverages"],
+    Spring: ["Vegetables R-Z", "Fruits G-P"],
+    Autumn: ["Squash", "Seeds and Nuts", "Comfort Foods"],
   };
 
   return await Food.find({ category: { $in: seasonalCategories[season] } });

@@ -32,10 +32,11 @@ export const getConsumedMeals = async (req, res) => {
       const userId = req.user._id; // Ensure authentication middleware sets req.user
   
       const consumedMeals = await Meal.aggregate([
+        { $match: { userId } },  // Make sure meals belong to the user
         { $unwind: "$dailyPlans" },
         { $unwind: "$dailyPlans.meals" },
         { $unwind: "$dailyPlans.meals.foods" },
-        { $match: { "dailyPlans.meals.foods.isConsumed": true } },
+        { $match: { "dailyPlans.meals.foods.isConsumed": true } }, // Ensure the food is marked as consumed
         {
           $group: {
             _id: userId,
@@ -46,6 +47,7 @@ export const getConsumedMeals = async (req, res) => {
           },
         },
       ]);
+      
   
       res.status(200).json({ success: true, data: consumedMeals });
     } catch (error) {
@@ -53,5 +55,61 @@ export const getConsumedMeals = async (req, res) => {
       res.status(500).json({ success: false, message: "Server Error" });
     }
   };
+
+  export const saveLatestDietPlan = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const { meals } = req.body; // Expecting meal data from the frontend
+  
+      await DietPlan.findOneAndUpdate(
+        { userId },
+        { meals, updatedAt: new Date() },
+        { upsert: true, new: true }
+      );
+  
+      res.status(200).json({ success: true, message: "Diet plan saved!" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+
+  export const markFoodAsConsumed = async (req, res) => {
+    try {
+      const { mealId, foodId, isConsumed } = req.body;
+      const userId = req.user._id;
+  
+      await Meal.updateOne(
+        { "dailyPlans.meals._id": mealId, "dailyPlans.meals.foods._id": foodId },
+        { $set: { "dailyPlans.meals.foods.$.isConsumed": isConsumed } }
+      );
+  
+      res.status(200).json({ success: true, message: "Meal status updated!" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+
+  export const getLatestDietPlan = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const dietPlan = await DietPlan.findOne({ userId }).sort({ updatedAt: -1 });
+  
+      res.status(200).json({ success: true, data: dietPlan || [] });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+
+  export const deleteDietPlan = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      await DietPlan.deleteOne({ userId });
+  
+      res.status(200).json({ success: true, message: "Diet plan deleted!" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+  
 
 export default router;

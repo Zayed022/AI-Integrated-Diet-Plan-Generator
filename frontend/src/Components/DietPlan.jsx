@@ -53,83 +53,97 @@ const DietPlan = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">Your Meal Plan</h1>
-            
-            {dailyPlans.map((dayPlan) => (
-                <div key={dayPlan._id} className="mb-12">
-                    <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                        {new Date(dayPlan.date).toLocaleDateString()}
-                    </h2>
-                    
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                        {dayPlan.meals.map((meal) => (
-                            <div key={meal._id} className="bg-white rounded-lg shadow-md p-6">
-                                <h3 className="text-lg font-medium text-gray-800 mb-4">
-                                    {meal.mealType}
-                                </h3>
-                                
-                                <div className="mb-4">
-                                    <h4 className="text-sm font-semibold text-gray-600 mb-2">
-                                        Foods:
-                                    </h4>
-                                    <ul className="space-y-2">
-                                        {meal.foods.map((food) => (
-                                            <li key={food._id} className="text-sm text-gray-700">
-                                                <div className="flex justify-between">
-                                                    <span>{food.name}</span>
-                                                    <span>
-                                                        {food.servingSize.amount}
-                                                        {food.servingSize.unit}
-                                                    </span>
-                                                </div>
-                                                <div className="text-xs text-gray-500">
-                                                    {food.calories} kcal • 
-                                                    P: {food.protein}g • 
-                                                    C: {food.carbs}g • 
-                                                    F: {food.fats}g
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 py-10 px-4">
+            <div className="container mx-auto">
+                <h1 className="text-4xl font-bold text-gray-800 text-center mb-10">
+                    🍽️ Your Personalized Meal Plan
+                </h1>
 
-                                <div className="pt-4 border-t border-gray-100">
-                                    <h4 className="text-sm font-semibold text-gray-600 mb-2">
-                                        Total Nutrients:
-                                    </h4>
-                                    <div className="grid grid-cols-2 gap-2 text-sm">
-                                        <div className="text-gray-700">Calories:</div>
-                                        <div className="text-gray-900 font-medium">
-                                            {meal.totalNutrients.calories}
-                                        </div>
-                                        <div className="text-gray-700">Protein:</div>
-                                        <div className="text-gray-900 font-medium">
-                                            {meal.totalNutrients.protein}g
-                                        </div>
-                                        <div className="text-gray-700">Carbs:</div>
-                                        <div className="text-gray-900 font-medium">
-                                            {meal.totalNutrients.carbs}g
-                                        </div>
-                                        <div className="text-gray-700">Fats:</div>
-                                        <div className="text-gray-900 font-medium">
-                                            {meal.totalNutrients.fats}g
+                {dailyPlans.map((dayPlan) => (
+                    <div key={dayPlan._id} className="mb-12">
+                        <h2 className="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2 text-center">
+                            📅 {new Date(dayPlan.date).toLocaleDateString()}
+                        </h2>
+
+                        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                            {dayPlan.meals.map((meal) => (
+                                <div 
+                                    key={meal._id} 
+                                    className="rounded-xl shadow-xl p-6 border border-gray-100 hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+                                    style={{
+                                        background: "rgba(255, 255, 255, 0.8)",
+                                        backdropFilter: "blur(10px)",
+                                    }}
+                                >
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3 text-center">
+                                        🍽️ {meal.mealType}
+                                    </h3>
+
+                                    <div className="mb-4">
+                                        <h4 className="text-sm font-semibold text-gray-600 mb-2">
+                                            🥗 Foods:
+                                        </h4>
+                                        <ul className="space-y-3">
+                                            {meal.foods.map((food) => (
+                                                <li 
+                                                    key={food._id} 
+                                                    className="text-sm text-gray-800 bg-white/90 p-3 rounded-lg shadow-md"
+                                                >
+                                                    <div className="flex justify-between">
+                                                        <span className="font-medium">{food.name}</span>
+                                                        <span className="text-gray-500 text-sm">
+                                                            {food.servingSize.amount}{food.servingSize.unit}
+                                                        </span>
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 mt-1">
+                                                        🔥 {food.calories} kcal • 
+                                                        💪 P: {food.protein}g • 
+                                                        🍞 C: {food.carbs}g • 
+                                                        🥑 F: {food.fats}g
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-gray-300 mt-4">
+                                        <h4 className="text-sm font-semibold text-gray-600 mb-2">
+                                            📊 Total Nutrients:
+                                        </h4>
+                                        <div className="grid grid-cols-2 gap-3 text-sm">
+                                            <div className="text-gray-700">🔥 Calories:</div>
+                                            <div className="text-gray-900 font-medium">
+                                                {meal.totalNutrients.calories}
+                                            </div>
+                                            <div className="text-gray-700">💪 Protein:</div>
+                                            <div className="text-gray-900 font-medium">
+                                                {meal.totalNutrients.protein}g
+                                            </div>
+                                            <div className="text-gray-700">🍞 Carbs:</div>
+                                            <div className="text-gray-900 font-medium">
+                                                {meal.totalNutrients.carbs}g
+                                            </div>
+                                            <div className="text-gray-700">🥑 Fats:</div>
+                                            <div className="text-gray-900 font-medium">
+                                                {meal.totalNutrients.fats}g
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
 
-            {dailyPlans.length === 0 && !loading && (
-                <div className="text-center py-8 text-gray-500">
-                    No meal plans available for the selected dates
-                </div>
-            )}
+                {dailyPlans.length === 0 && !loading && (
+                    <div className="text-center py-8 text-gray-500 text-lg">
+                        🚫 No meal plans available for the selected dates.
+                    </div>
+                )}
+            </div>
         </div>
     );
+
 };
 
 export default DietPlan;

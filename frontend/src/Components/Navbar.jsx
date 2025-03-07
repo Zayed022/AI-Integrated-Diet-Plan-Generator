@@ -24,8 +24,8 @@ const Navbar = () => {
           <Link to="/about" className="text-gray-700 hover:text-green-600 transition">
             About
           </Link>
-          <Link to="/contact" className="text-gray-700 hover:text-green-600 transition">
-            Contact
+          <Link to="/advance-user-preference" className="text-gray-700 hover:text-green-600 transition">
+            Advanced Recommendation
           </Link>
         </div>
 
