@@ -72,11 +72,13 @@ export const getAdvancedRecommendations = async (req, res) => {
 
       if (type === "Seasonal") {
           recommendations = await getSeasonalFoods();
-      } else if (type === "Location-based") {
+      }
+      /* else if (type === "Location-based") {
           recommendations = await getLocationBasedFoods(user.location);
       }
+          */
 
-      console.log("Recommendations found:", recommendations); // Debugging line
+      //console.log("Recommendations found:", recommendations); // Debugging line
 
       if (recommendations.length === 0) {
           return res.status(200).json({ message: "No matching recommendations found", recommendations: [] });
@@ -84,7 +86,7 @@ export const getAdvancedRecommendations = async (req, res) => {
 
       res.status(200).json({ success: true, recommendations });
   } catch (error) {
-      console.error("Error in getAdvancedRecommendations:", error);
+      console.log("Error in getAdvancedRecommendations:", error);
       res.status(500).json({ error: "Failed to fetch advanced recommendations" });
   }
 };

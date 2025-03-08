@@ -192,7 +192,10 @@ const recommendFoods = async (user, calorieLimit, mealType) => {
    return await Food.aggregate([
     { $match: { calories: { $lte: calorieLimit }, ...preferences, category: { $in: categoryFilter } } },
     { $sample: { size: 5 } }, // Random selection to ensure variety
+    
+    
   ]);
+  
 };
 
 /**
@@ -254,15 +257,18 @@ export const getSeasonalFoods = async () => {
     Spring: ["Vegetables R-Z", "Fruits G-P"],
     Autumn: ["Squash", "Seeds and Nuts", "Comfort Foods"],
   };
+  
 
   return await Food.find({ category: { $in: seasonalCategories[season] } });
 };
 
 const getCurrentSeason = () => {
   const month = new Date().getMonth();
+  console.log(month)
   if ([11, 0, 1].includes(month)) return "Winter";
   if ([2, 3, 4].includes(month)) return "Spring";
   if ([5, 6, 7].includes(month)) return "Summer";
+  
   return "Autumn";
 };
 

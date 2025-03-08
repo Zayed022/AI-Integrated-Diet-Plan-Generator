@@ -9,6 +9,7 @@ import { LayoutDashboard } from 'lucide-react'
 import DietPlan from './Components/DietPlan'
 import { UserPreferencesForm } from './Components/UserPreferencesForm'
 import { AdvancedPreferencesForm } from './Components/AdvancePreferenceForm'
+import SeasonalDietPlan from './Components/SeasonalDietPlan'
 
 function App() {
  
@@ -23,6 +24,7 @@ function App() {
       <Route path ="/diet-plan" element={<DietPlan/>}/>
       <Route path ="/user-preference" element={<UserPreferencesForm/>}/>
       <Route path ="/advance-user-preference" element={<AdvancedPreferencesForm/>}/>
+      <Route path ="/advance-diet-plan" element={<SeasonalDietPlan/>}/>
       
       </Routes>
       

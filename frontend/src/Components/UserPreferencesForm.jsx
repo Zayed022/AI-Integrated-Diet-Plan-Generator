@@ -1,75 +1,51 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const UserPreferencesForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    age: '',
-    weight: '',
-    height: '',
-    activityLevels: '',
-    preference: '',
-    gender: '',
-    goals: '',
-    workType: '',
-    medicalConditions: ''
+    age: "",
+    weight: "",
+    height: "",
+    activityLevels: "",
+    preference: "",
+    gender: "",
+    goals: "",
+    workType: "",
+    medicalConditions: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const storedUserId = localStorage.getItem("userId");
+  const [error, setError] = useState("");
 
-  const activityLevelsOptions = [
-    'sedentary', 'lightly-active', 'moderately-active', 'very-active', 'extra-active'
-  ];
-
-  const preferenceOptions = [
-   "Vegan","Vegetarian","Non-Vegetarian"
-  ]
-
-  const genderOptions = [
-    "Male","Female","Non-binary","Prefer not to say"
-  ]
-
-  const goalsOptions = [
-    "Weight loss","Weight gain","Muscle Building"
-  ]
-
-  const workTypeOptions = [
-    "Sedentary","Moderate","Heavy"
-  ]
-
-
+  const activityLevelsOptions = ["Low", "Moderate", "High"];
+  const preferenceOptions = ["Vegan", "Vegetarian", "Non-Vegetarian"];
+  const genderOptions = ["Male", "Female", "Non-binary", "Prefer not to say"];
+  const goalsOptions = ["Weight loss", "Weight gain", "Muscle Building"];
+  const workTypeOptions = ["Sedentary", "Moderate", "Heavy"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!storedUserId) {
-      setError("User session expired. Please login again.");
-      return;
-    }
-
     setLoading(true);
     try {
       const response = await axios.post(
-        '/api/v1/users/details',
+        "/api/v1/users/details",
         {
           ...formData,
-          userId: storedUserId // Add userId to the request body
         },
-        { 
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          } 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         }
       );
-      
+
       if (response.data.success) {
-        navigate('/diet-plan');
+        navigate("/diet-plan");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save preferences');
+      setError(err.response?.data?.message || "Failed to save preferences");
     } finally {
       setLoading(false);
     }
@@ -80,115 +56,74 @@ export const UserPreferencesForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Tell Us About Yourself</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Age</label>
-            <input
-              type="number"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              required
-            />
-          </div>
+    <div className="max-w-3xl mx-auto mt-10 p-8 bg-gradient-to-r from-green-50 to-white rounded-2xl shadow-xl">
+      <h2 className="text-3xl font-bold text-green-700 text-center mb-6">
+        🌿 Personalize Your Diet Plan
+      </h2>
+      {error && <p className="text-red-500 text-center">{error}</p>}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
-            <input
-              type="number"
-              name="weight"
-              value={formData.weight}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            { label: "Age", name: "age", type: "number" },
+            { label: "Weight (kg)", name: "weight", type: "number" },
+            { label: "Height (cm)", name: "height", type: "number" },
+          ].map((field) => (
+            <div key={field.name}>
+              <label className="block text-sm font-semibold text-gray-700">
+                {field.label}
+              </label>
+              <input
+                type={field.type}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 p-3"
+                required
+              />
+            </div>
+          ))}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Height (cm)</label>
-            <input
-              type="number"
-              name="height"
-              value={formData.height}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              required
-            />
-          </div>
+          {[
+            { label: "Gender", name: "gender", options: genderOptions },
+            { label: "Activity Level", name: "activityLevels", options: activityLevelsOptions },
+            { label: "Dietary Preference", name: "preference", options: preferenceOptions },
+            { label: "Health Goals", name: "goals", options: goalsOptions },
+            { label: "Work Type", name: "workType", options: workTypeOptions },
+          ].map((field) => (
+            <div key={field.name}>
+              <label className="block text-sm font-semibold text-gray-700">
+                {field.label}
+              </label>
+              <select
+                name={field.name}
+                value={formData[field.name]}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 p-3"
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+                {field.options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Gender</label>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Activity Level</label>
-            <select
-              name="activityLevels"
-              value={formData.activityLevels}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              required
-            >
-              {activityLevelsOptions.map(level => (
-                <option key={level} value={level}>{level.replace('-', ' ')}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Dietary Preference</label>
-            <select
-              name="preference"
-              value={formData.preference}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            >
-                
-              <option value="vegetarian">Vegetarian</option>
-              <option value="vegan">Vegan</option>
-              <option value="non-vegetarian">Non-Vegetarian</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Health Goals</label>
-            <select
-              name="goals"
-              value={formData.goals}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            >
-              <option value="weight-loss">Weight Loss</option>
-              <option value="muscle-gain">Muscle Gain</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Medical Conditions</label>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-gray-700">
+              Medical Conditions
+            </label>
             <input
               type="text"
               name="medicalConditions"
               value={formData.medicalConditions}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              placeholder="Diabetes, Hypertension, etc."
+              className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 p-3"
+              placeholder="e.g., Diabetes, Hypertension"
             />
           </div>
         </div>
@@ -196,9 +131,9 @@ export const UserPreferencesForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400"
+          className="w-full bg-green-600 text-white text-lg font-semibold py-3 rounded-lg hover:bg-green-700 transition-all duration-300 disabled:bg-gray-400"
         >
-          {loading ? 'Saving Preferences...' : 'Generate My Plan'}
+          {loading ? "Saving Preferences..." : "Generate My Plan"}
         </button>
       </form>
     </div>

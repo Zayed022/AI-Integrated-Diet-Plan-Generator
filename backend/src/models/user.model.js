@@ -47,7 +47,7 @@ const userSchema = new Schema({
     },
     gender:{
         type:String,
-        enum:["Male","Female","Non-binary","Prefer not to say"],
+        enum:["Male","Female","Other"],
     },
     goals:{
         type:String,
@@ -55,7 +55,7 @@ const userSchema = new Schema({
     },
     workType:{
         type:String,
-        enum:["Sedentary","Moderate","Heavy"],
+        enum:['sedentary', 'lightly-active', 'moderately-active', 'very-active', 'extra-active'],
     },
     medicalConditions:{
         type:String,

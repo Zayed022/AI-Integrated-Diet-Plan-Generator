@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // Icons for mobile menu
+import LogoutButton from "./auth/Logout";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if token exists in localStorage
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Set true if token exists, false otherwise
+  }, []);
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 left-0 z-50">
@@ -31,12 +39,17 @@ const Navbar = () => {
 
         {/* Login/Signup Button */}
         <div className="hidden md:block">
-          <Link to="/login">
-            <button className="bg-green-600 text-white px-5 py-2 rounded-lg font-semibold transition hover:bg-green-700">
-              Login / Sign Up
-            </button>
-          </Link>
-        </div>
+      {isLoggedIn ? (
+        <LogoutButton />
+      ) : (
+        <Link to="/login">
+          <button className="bg-green-600 text-white px-5 py-2 rounded-lg font-semibold transition hover:bg-green-700">
+            Login / Sign Up
+          </button>
+        </Link>
+      )}
+    </div>
+
 
         {/* Mobile Menu Button */}
         <button

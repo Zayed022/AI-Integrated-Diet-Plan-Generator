@@ -5,47 +5,36 @@ import axios from 'axios';
 export const AdvancedPreferencesForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    season: '',
-    location: '',
-    foodAllergies: '',
-    mealTiming: '',
-    cuisinePreference: ''
+    age: '',
+    weight: '',
+    height: '',
+    activityLevels: '',
+    preference: '',
+    gender: '',
+    goals: '',
+    workType: '',
+    medicalConditions: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const storedUserId = localStorage.getItem("userId");
 
-  const seasonOptions = ['Summer', 'Winter', 'Monsoon', 'All Seasons'];
-  const mealTimingOptions = ['Early Morning', 'Morning', 'Afternoon', 'Evening', 'Night'];
-  const cuisineOptions = ['Indian', 'Mediterranean', 'Asian', 'Continental', 'Keto', 'Paleo'];
+  const activityLevelsOptions = ["Low", "Moderate", "High"];
+  const preferenceOptions = ["Vegan", "Vegetarian", "Non-Vegetarian"];
+  const genderOptions = ["Male", "Female", "Non-binary", "Prefer not to say"];
+  const goalsOptions = ["Weight loss", "Weight gain", "Muscle Building"];
+  const workTypeOptions = ["Sedentary", "Moderate", "Heavy"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!storedUserId) {
-      setError("User session expired. Please login again.");
-      return;
-    }
-
     setLoading(true);
     try {
-      const response = await axios.post(
-        '/api/v1/users/advanced-preferences',
-        {
-          ...formData,
-          userId: storedUserId
-        },
-        { 
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          } 
+      const response = await axios.post('/api/v1/users/details', formData, {
+        headers: { 
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
         }
-      );
-      
-      if (response.data.success) {
-        navigate('/personalized-diet');
-      }
+      });
+      if (response.data.success) navigate('/advance-diet-plan');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to save preferences');
     } finally {
@@ -58,86 +47,49 @@ export const AdvancedPreferencesForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Advanced Diet Preferences</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Preferred Season</label>
-            <select
-              name="season"
-              value={formData.season}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            >
-              {seasonOptions.map(season => (
-                <option key={season} value={season}>{season}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              placeholder="Enter your city or region"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Food Allergies</label>
-            <input
-              type="text"
-              name="foodAllergies"
-              value={formData.foodAllergies}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-              placeholder="E.g., Nuts, Dairy, Gluten"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Preferred Meal Timing</label>
-            <select
-              name="mealTiming"
-              value={formData.mealTiming}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            >
-              {mealTimingOptions.map(time => (
-                <option key={time} value={time}>{time}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Cuisine Preference</label>
-            <select
-              name="cuisinePreference"
-              value={formData.cuisinePreference}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            >
-              {cuisineOptions.map(cuisine => (
-                <option key={cuisine} value={cuisine}>{cuisine}</option>
-              ))}
-            </select>
-          </div>
+    <div className="max-w-3xl mx-auto p-8 bg-gradient-to-r from-green-100 to-green-200 rounded-xl shadow-lg">
+      <h2 className="text-3xl font-bold text-green-700 text-center mb-6">Personalize Your Diet Plan</h2>
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {['age', 'weight', 'height', 'medicalConditions'].map((field, index) => (
+            <div key={index}>
+              <label className="block text-lg font-semibold text-gray-700">{field.replace(/([A-Z])/g, ' $1').toUpperCase()}</label>
+              <input
+                type={field === 'age' || field === 'weight' || field === 'height' ? 'number' : 'text'}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-md px-4 py-2 text-gray-700 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-400"
+                required={field !== 'medicalConditions'}
+                placeholder={field === 'medicalConditions' ? 'Diabetes, Hypertension, etc.' : ''}
+              />
+            </div>
+          ))}
+          {[['gender', genderOptions], ['activityLevels', activityLevelsOptions], ['preference', preferenceOptions], ['goals', goalsOptions], ['workType', workTypeOptions]].map(([name, options], index) => (
+            <div key={index}>
+              <label className="block text-lg font-semibold text-gray-700">{name.replace(/([A-Z])/g, ' $1').toUpperCase()}</label>
+              <select
+                name={name}
+                value={formData[name]}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-md px-4 py-2 text-gray-700 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-400"
+                required
+              >
+                <option value="">Select {name}</option>
+                {options.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+          ))}
         </div>
-
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 disabled:bg-gray-400"
         >
-          {loading ? 'Saving Preferences...' : 'Save Preferences'}
+          {loading ? 'Saving Preferences...' : 'Generate My Plan'}
         </button>
       </form>
     </div>

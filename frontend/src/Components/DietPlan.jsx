@@ -5,6 +5,7 @@ const DietPlan = () => {
     const [dailyPlans, setDailyPlans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const storedUserId = localStorage.getItem("userId");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,9 +14,9 @@ const DietPlan = () => {
                 const response = await axios.post(
                     "/api/v1/recommendation/recommend",
                     {
-                        userId: "678140b0d84a94f1640c2077",
-                        startDate: "2025-03-11",
-                        endDate: "2025-03-12"
+                        userId: "67cc9ac071d7000ecdd047f5",
+                        startDate: "2025-03-13",
+                        endDate: "2025-03-14"
                     },
                     { headers: { "Content-Type": "application/json" } }
                 );
@@ -26,7 +27,7 @@ const DietPlan = () => {
                     setError("No meal plans available");
                 }
             } catch (error) {
-                console.error("Error fetching meals:", error);
+                console.log("Error fetching meals:", error);
                 setError("Failed to load meal plans. Please try again later.");
             } finally {
                 setLoading(false);
