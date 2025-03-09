@@ -10,6 +10,7 @@ import DietPlan from './Components/DietPlan'
 import { UserPreferencesForm } from './Components/UserPreferencesForm'
 import { AdvancedPreferencesForm } from './Components/AdvancePreferenceForm'
 import SeasonalDietPlan from './Components/SeasonalDietPlan'
+import About from './Components/About'
 
 function App() {
  
@@ -21,6 +22,7 @@ function App() {
       <Route path ="/register" element={<Register/>}/>
       <Route path ="/" element={<Home/>}/>
       <Route path ="/dashboard" element={<Dashboard/>}/>
+      <Route path ="/about" element={<About/>}/>
       <Route path ="/diet-plan" element={<DietPlan/>}/>
       <Route path ="/user-preference" element={<UserPreferencesForm/>}/>
       <Route path ="/advance-user-preference" element={<AdvancedPreferencesForm/>}/>

@@ -48,7 +48,7 @@ export const AdvancedPreferencesForm = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-8 bg-gradient-to-r from-green-100 to-green-200 rounded-xl shadow-lg">
-      <h2 className="text-3xl font-bold text-green-700 text-center mb-6">Personalize Your Diet Plan</h2>
+      <h2 className="text-3xl font-bold text-green-700 text-center mb-6">Personalize Your Diet Plan based on Season</h2>
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
