@@ -1,3 +1,4 @@
+import { Food } from "../models/foodItem.model.js";
 import { Meal } from "../models/meal.model.js";
 
 export const submitFeedback = async (req, res) => {
@@ -43,3 +44,22 @@ export const submitFeedback = async (req, res) => {
     res.status(500).json({ error: "Failed to submit feedback." });
   }
 };
+
+export const submitRating = async (req, res) => {
+  try {
+      const { foodId, mealId, rating, userId } = req.body;
+
+      // Store rating in database
+      await Food.findByIdAndUpdate(foodId, {
+          $push: { ratings: { userId, rating } }
+      });
+      
+      res.status(200).json({ success: true, message: "Rating submitted successfully" });
+      console.log("Rating submitted successfully")
+      
+  } catch (error) {
+      console.error("Error submitting rating:", error);
+      res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
